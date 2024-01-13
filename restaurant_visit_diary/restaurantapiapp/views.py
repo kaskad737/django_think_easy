@@ -6,6 +6,8 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin
 
 from .models import Restaurant, Visit
 from .serializers import RestaurantSerializer, VisitSerializer
+# from .permissions import CustomPermission
+from rest_framework.permissions import IsAuthenticated
 
 class RestaurantsListView(ListCreateAPIView):
     queryset = Restaurant.objects.all()
@@ -18,6 +20,7 @@ class RestaurantDeleteView(RetrieveUpdateDestroyAPIView):
 class VisitsListView(ListCreateAPIView):
     queryset = Visit.objects.all()
     serializer_class = VisitSerializer
+    permission_classes = [IsAuthenticated]
 
 class VisitDeleteView(RetrieveUpdateDestroyAPIView):
     queryset = Visit.objects.all()

@@ -9,6 +9,7 @@ from .views import (
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
+    TokenVerifyView,
 )
 
 
@@ -17,6 +18,7 @@ app_name = 'restaurantapiapp'
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('list_restaurants/', RestaurantsListView.as_view(), name='restaurants_list'),
     path('delete_restaurants/<int:pk>/', RestaurantDeleteView.as_view(), name='restaurants_delete'),
     path('list_visits/', VisitsListView.as_view(), name='visits_list'),
