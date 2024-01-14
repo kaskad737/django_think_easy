@@ -6,7 +6,7 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from django.db.models import Avg
 
 from .models import Restaurant, Visit
-from .serializers import UserSerializer, RestaurantSerializer, VisitSerializer
+from .serializers import UserSerializer, RestaurantDetailsSerializer, RestaurantListSerializer, VisitListSerializer, VisitDetailsSerializer
 from .permissions import IsCreatorOrReadOnly
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
@@ -21,19 +21,20 @@ class UserDeleteView(RetrieveUpdateDestroyAPIView):
 
 class RestaurantsListView(ListCreateAPIView):
     # queryset = Restaurant.objects.all()
-    queryset = Restaurant.objects.all().annotate(_average_rating=Avg('visits__rating'))
-    serializer_class = RestaurantSerializer
+    queryset = Restaurant.objects.all().annotate(_average_rating=Avg('visits__rating'), _average_expenses=Avg('visits__expenses'))
+    serializer_class = RestaurantListSerializer
     
 
 class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
-    queryset = Restaurant.objects.all()
-    serializer_class = RestaurantSerializer
+    # queryset = Restaurant.objects.all()
+    queryset = Restaurant.objects.all().annotate(_average_rating=Avg('visits__rating'), _average_expenses=Avg('visits__expenses'))
+    serializer_class = RestaurantDetailsSerializer
 
 class VisitsListView(ListCreateAPIView):
     queryset = Visit.objects.all()
-    serializer_class = VisitSerializer
+    serializer_class = VisitListSerializer
     # permission_classes = [IsCreatorOrReadOnly]
 
 class VisitDetailsView(RetrieveUpdateDestroyAPIView):
     queryset = Visit.objects.all()
-    serializer_class = VisitSerializer
+    serializer_class = VisitDetailsSerializer
