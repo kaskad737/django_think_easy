@@ -17,7 +17,7 @@ class Restaurant(models.Model):
     @property
     def average_expenses(self):
         if hasattr(self, '_average_expenses'):
-            return self._average_rating
+            return self._average_expenses
         return self.visit.aggregate(Avg('expenses'))
 
     def __str__(self):
