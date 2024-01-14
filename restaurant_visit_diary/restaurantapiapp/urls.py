@@ -1,9 +1,11 @@
 from django.urls import path
 from .views import (
+    UsersListView,
+    UserDeleteView,
     RestaurantsListView, 
-    RestaurantDeleteView,
+    RestaurantDetailsView,
     VisitsListView,
-    VisitDeleteView,
+    VisitDetailsView,
 )
 
 from rest_framework_simplejwt.views import (
@@ -19,8 +21,10 @@ urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('list_restaurants/', RestaurantsListView.as_view(), name='restaurants_list'),
-    path('delete_restaurants/<int:pk>/', RestaurantDeleteView.as_view(), name='restaurants_delete'),
-    path('list_visits/', VisitsListView.as_view(), name='visits_list'),
-    path('delete_visits/<int:pk>/', VisitDeleteView.as_view(), name='visits_delete'),
+    path('users/', UsersListView.as_view(), name='users'),
+    path('user/<int:pk>/', UserDeleteView.as_view(), name='user_details'),
+    path('restaurants_list/', RestaurantsListView.as_view(), name='restaurants_list'),
+    path('restaurants/<int:pk>/', RestaurantDetailsView.as_view(), name='restaurant_detail'),
+    path('visits_list/', VisitsListView.as_view(), name='visits_list'),
+    path('visits/<int:pk>/', VisitDetailsView.as_view(), name='visit_detail'),
 ]

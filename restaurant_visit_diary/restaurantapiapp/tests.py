@@ -3,15 +3,28 @@ from rest_framework import status
 from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
+from .models import Restaurant
 
 class YourTestCase(APITestCase):
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.user = User.objects.create_user(username='testuser', password='testpassword')
+        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')  
+        cls.secure_page_url = reverse('restaurantapiapp:visits_list')
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.user.delete()
+
     
     def setUp(self):
-        # Создайте пользователя для тестирования
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        # Создайте URL-адреса для ваших представлений
-        self.login_url = reverse('restaurantapiapp:token_obtain_pair')  
-        self.secure_page_url = reverse('restaurantapiapp:visits_list')
+        self.restaurant = Restaurant.objects.create(name='test_restaurant', created_by=self.user.pk)
+        # products = [self.product.pk]
+        # self.order.products.set(products)
+
+    def tearDown(self) -> None:
+        self.restaurant.delete()
 
     def obtain_token(self, username, password):
         response = self.client.post(self.login_url, {'username': username, 'password': password})
