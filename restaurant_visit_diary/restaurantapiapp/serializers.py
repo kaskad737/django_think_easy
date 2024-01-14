@@ -24,7 +24,7 @@ class RestaurantListSerializer(serializers.ModelSerializer):
     )
     class Meta:
         model = Restaurant
-        fields = 'pk', 'name', 'location', 'cuisine_type', 'average_rating', 'average_expenses'
+        fields = 'pk', 'name', 'location', 'cuisine_type', 'average_rating', 'average_expenses', 'created_by'
 
 class RestaurantDetailsSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
