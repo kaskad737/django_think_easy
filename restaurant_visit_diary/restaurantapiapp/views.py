@@ -3,6 +3,7 @@ from rest_framework.request import Request
 from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
+from django.db.models import Avg
 
 from .models import Restaurant, Visit
 from .serializers import UserSerializer, RestaurantSerializer, VisitSerializer
@@ -19,8 +20,10 @@ class UserDeleteView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
 class RestaurantsListView(ListCreateAPIView):
-    queryset = Restaurant.objects.all()
+    # queryset = Restaurant.objects.all()
+    queryset = Restaurant.objects.all().annotate(_average_rating=Avg('visits__rating'))
     serializer_class = RestaurantSerializer
+    
 
 class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
     queryset = Restaurant.objects.all()

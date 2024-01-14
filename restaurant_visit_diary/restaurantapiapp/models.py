@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg
 from django.contrib.auth.models import User
 
 class Restaurant(models.Model):
@@ -6,6 +7,18 @@ class Restaurant(models.Model):
     location = models.CharField(max_length=255)
     cuisine_type = models.CharField(max_length=100)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    # avg_rate = ...
+    # avg_spendings = ...
+
+    # @property
+    # def average_rating(self):
+    #     return self.visit.aggregate(Avg('rating'))['rating_avg']
+    
+    @property
+    def average_rating(self):
+        if hasattr(self, '_average_rating'):
+            return self._average_rating
+        return self.visit.aggregate(Avg('rating'))
 
     def __str__(self):
         return self.name

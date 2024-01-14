@@ -8,6 +8,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = 'pk', 'username', 'password'
 
 class RestaurantSerializer(serializers.ModelSerializer):
+    average_rating = serializers.SerializerMethodField()
+    def get_average_rating(self, obj):
+        return obj.average_rating
     visits = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
@@ -15,7 +18,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
     )
     class Meta:
         model = Restaurant
-        fields = 'pk', 'name', 'location', 'cuisine_type', 'created_by', 'visits'
+        fields = 'pk', 'name', 'location', 'cuisine_type', 'created_by', 'visits', 'average_rating'
 
 class VisitSerializer(serializers.ModelSerializer):
     restaurant = serializers.HyperlinkedRelatedField(
