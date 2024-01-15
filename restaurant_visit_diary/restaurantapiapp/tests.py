@@ -5,7 +5,7 @@ from django.urls import reverse
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Restaurant
 
-class YourTestCase(APITestCase):
+class VisitsListTestCase(APITestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -16,12 +16,9 @@ class YourTestCase(APITestCase):
     @classmethod
     def tearDownClass(cls) -> None:
         cls.user.delete()
-
     
     def setUp(self):
-        self.restaurant = Restaurant.objects.create(name='test_restaurant', created_by=self.user.pk)
-        # products = [self.product.pk]
-        # self.order.products.set(products)
+        self.restaurant = Restaurant.objects.create(name='test_restaurant', created_by=self.user)
 
     def tearDown(self) -> None:
         self.restaurant.delete()
