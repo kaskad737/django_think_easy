@@ -5,8 +5,7 @@ from rest_framework.generics import (
     ListAPIView
     )
 from rest_framework_simplejwt.views import TokenObtainPairView
-# IsAuthenticated
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Restaurant, Visit
 from .serializers import (
     UsersListSerializer,
@@ -39,7 +38,7 @@ class UsersListView(ListAPIView):
 
 class RestaurantsListView(ListCreateAPIView):
     serializer_class = RestaurantListSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
@@ -62,7 +61,7 @@ class RestaurantsListView(ListCreateAPIView):
 
 class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
     serializer_class = RestaurantDetailsSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
 
@@ -82,7 +81,7 @@ class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
 
 class VisitsListView(ListCreateAPIView):
     serializer_class = VisitListSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
 
@@ -100,7 +99,7 @@ class VisitsListView(ListCreateAPIView):
 class VisitDetailsView(RetrieveUpdateDestroyAPIView):
     queryset = Visit.objects.all()
     serializer_class = VisitDetailsSerializer
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
 

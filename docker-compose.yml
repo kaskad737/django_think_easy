@@ -5,7 +5,7 @@ services:
     image: python:3.8
     command: bash -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./your-django-project:/app
+      - ./restaurant_visit_diary:/app
     ports:
       - "8000:8000"
     depends_on:
