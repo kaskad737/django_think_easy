@@ -29,4 +29,4 @@ class Visit(models.Model):
     restaurant = models.ForeignKey(Restaurant, related_name='visits', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"Visit to {self.restaurant.name} on {self.date_visited}"
+        return f'Visit to {self.restaurant.name} on {self.date_visited}'
