@@ -2,8 +2,9 @@ version: '3'
 
 services:
   web:
-    image: python:3.8
-    command: bash -c "pip install -r requirements.txt && python manage.py runserver 0.0.0.0:8000"
+    restart: always
+    image: python:3.10
+    command: bash -c "pip install -r ./app/requirements.txt && python ./app/manage.py makemigrations && python ./app/manage.py migrate && python ./app/manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./restaurant_visit_diary:/app
     ports:
@@ -11,18 +12,26 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=postgres://user:password@db:5432/dbname
+      - DB_NAME=django_restaurants
+      - DB_USER=postgres
+      - DB_PASSWORD=django-restaurants
+      - DB_HOST=db
+      - DB_PORT=5432
+      - SECRET_KEY=django-insecure-2#=2uska*^8#jt0@#%0u0tk3#v@y9@-8wio@7-una4=+irswhh
     networks:
       - your_network
 
   db:
-    image: postgres:12
+    restart: always
+    image: postgres:16
     environment:
-      POSTGRES_DB: dbname
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: django_restaurants
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: django-restaurants
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5431:5432"
     networks:
       - your_network
 
