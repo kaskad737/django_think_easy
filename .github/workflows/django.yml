@@ -70,11 +70,11 @@ jobs:
       run: |
         python ./restaurant_visit_diary/manage.py test restaurantapiapp
       env:
-          # DATABASE_NAME: postgres
-          # DATABASE_USER: postgres
-          # DATABASE_PASS: postgres
-          # DATABASE_HOST: postgres
-          # DATABASE_PORT: 5432
+          DB_NAME: django_restaurants
+          DB_USER: postgres
+          DB_PASSWORD: django-restaurants
+          DB_HOST: localhost
+          DB_PORT: 5432
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     - run: flake8 .
