@@ -47,10 +47,14 @@ jobs:
     - name: Makemigration
       run: |
         python ./restaurant_visit_diary/manage.py makemigrations
+      env:
+          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     - name: Migrate
       run: |
         python ./restaurant_visit_diary/manage.py migrate
+      env:
+          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         
     - name: Run Tests
       run: |
