@@ -88,7 +88,7 @@ class RestaurantListSerializer(serializers.ModelSerializer):
 class RestaurantDetailsSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     average_expenses = serializers.SerializerMethodField()
-    list_url = serializers.SerializerMethodField()
+    restaurants_list_url = serializers.SerializerMethodField()
 
     def get_average_rating(self, obj):
         return obj.average_rating
@@ -96,7 +96,7 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
     def get_average_expenses(self, obj):
         return obj.average_expenses
 
-    def get_list_url(self, obj):
+    def get_restaurants_list_url(self, obj):
         request = self.context.get('request')
         return request.build_absolute_uri('/')[:-1] + reverse('restaurantapiapp:restaurants_list')
 
@@ -108,7 +108,7 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Restaurant
-        fields = 'pk', 'name', 'location', 'cuisine_type', 'visits', 'average_rating', 'average_expenses', 'list_url'
+        fields = 'pk', 'name', 'location', 'cuisine_type', 'visits', 'average_rating', 'average_expenses', 'restaurants_list_url'
 
 
 class VisitListSerializer(serializers.ModelSerializer):
@@ -123,11 +123,18 @@ class VisitListSerializer(serializers.ModelSerializer):
         model = Visit
         fields = 'pk', 'date_visited', 'expenses', 'note', 'rating', 'restaurant', 'details_url'
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # filter restaurants in visit create only for those who created restaurant.
+        current_user = self.context['request'].user
+        self.fields['restaurant'].queryset = Restaurant.objects.filter(created_by=current_user)
+
 
 class VisitDetailsSerializer(serializers.ModelSerializer):
-    list_url = serializers.SerializerMethodField()
+    visits_list_url = serializers.SerializerMethodField()
 
-    def get_list_url(self, obj):
+    def get_visits_list_url(self, obj):
         request = self.context.get('request')
         return request.build_absolute_uri('/')[:-1] + reverse('restaurantapiapp:visits_list')
     
@@ -138,4 +145,4 @@ class VisitDetailsSerializer(serializers.ModelSerializer):
     )
     class Meta:
         model = Visit
-        fields = 'pk', 'date_visited', 'expenses', 'note', 'rating', 'restaurant', 'list_url'
+        fields = 'pk', 'date_visited', 'expenses', 'note', 'rating', 'restaurant', 'visits_list_url'
