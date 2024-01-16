@@ -61,5 +61,6 @@ jobs:
           DATABASE_PASS: postgres
           DATABASE_HOST: postgres
           DATABASE_PORT: 5432
+          SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     - run: flake8 .
