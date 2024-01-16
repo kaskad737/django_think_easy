@@ -1,11 +1,10 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, ListAPIView
-from django.db.models import Avg
-
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Restaurant, Visit
 from .serializers import UsersListSerializer, RestaurantDetailsSerializer, RestaurantListSerializer, VisitListSerializer, VisitDetailsSerializer, MyTokenObtainPairSerializer, RegisterSerializer
 from django.contrib.auth.models import User
+from django.db.models import Avg
 
 
 class MyObtainTokenPairView(TokenObtainPairView):
@@ -86,7 +85,7 @@ class VisitDetailsView(RetrieveUpdateDestroyAPIView):
         current_user = self.request.user
         if current_user.is_anonymous:
             current_user = 1
-        # Filter visits based on restaurants created by the current user, to restrict access to non-creators
+        # Filter visits details based on restaurants created by the current user, to restrict access to non-creators
         queryset = Visit.objects.filter(restaurant__created_by=current_user)
 
         return queryset
