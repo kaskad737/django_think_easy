@@ -29,4 +29,4 @@ jobs:
         
     - name: Run Tests
       run: |
-        python ./restaurant_visit_diary/manage.py test
+        python ./restaurant_visit_diary/manage.py test restaurantapiapp
