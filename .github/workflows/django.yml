@@ -39,7 +39,7 @@ jobs:
     - name: Set up Python ${{env.PYTHON_VERSION}}
       uses: actions/setup-python@v3
       with:
-        python-version: $python-version
+        python-version: ${{env.PYTHON_VERSION}}
 
     - run: pip install flake8
         
