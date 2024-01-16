@@ -132,6 +132,14 @@ class RestaurantDetailsTestCase(APITestCase):
         response_json_new_restaurant = json.loads(response_new_restaurant.content)
 
         self.assertNotEqual(response_json_old_restaurant['name'], response_json_new_restaurant['name'])
+
+    def test_delete_restaurant(self):
+        # get token
+        token = self.obtain_token('testuser', 'testpassword')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+
+        response = self.client.delete(self.secure_page_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         
 
 class VisitsListTestCase(APITestCase):
@@ -285,3 +293,11 @@ class VisitDetailsTestCase(APITestCase):
         response_json_new_visit = json.loads(response_new_visit.content)
 
         self.assertNotEqual(response_json_old_visit['expenses'], response_json_new_visit['expenses'])
+
+    def test_delete_visit(self):
+        # get token
+        token = self.obtain_token('testuser', 'testpassword')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+
+        response = self.client.delete(self.secure_page_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
