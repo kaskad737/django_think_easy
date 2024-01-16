@@ -3,18 +3,28 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.reverse import reverse
 
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.models import User
 from .models import Restaurant, Visit
+
 
 class RestaurantsListTestCase(APITestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.user1 = User.objects.create_user(username='testuser', password='testpassword')
-        cls.user2 = User.objects.create_user(username='testuser2', password='testpassword2')
+        cls.user1 = User.objects.create_user(
+            username='testuser', 
+            password='testpassword'
+            )
+        cls.user2 = User.objects.create_user(
+            username='testuser2', 
+            password='testpassword2'
+            )
         cls.login_url = reverse('restaurantapiapp:token_obtain_pair')  
         cls.secure_page_url = reverse('restaurantapiapp:restaurants_list')
-        cls.restaurant = Restaurant.objects.create(name='test_restaurant_for_access', created_by=cls.user2)
+        cls.restaurant = Restaurant.objects.create(
+            name='test_restaurant_for_access', 
+            created_by=cls.user2
+            )
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -23,7 +33,10 @@ class RestaurantsListTestCase(APITestCase):
         cls.restaurant.delete()
 
     def obtain_token(self, username, password):
-        response = self.client.post(self.login_url, {'username': username, 'password': password})
+        response = self.client.post(self.login_url, {
+            'username': username, 
+            'password': password}
+            )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         return response.data['access']
 
@@ -49,15 +62,17 @@ class RestaurantsListTestCase(APITestCase):
         response = self.client.post(self.secure_page_url, data=data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-
         # test to see if the restaurant was actually created
         response = self.client.get(self.secure_page_url)
         response_json = json.loads(response.content)
         self.assertEqual(response_json['results'][0]['name'], data['name'])
 
-
-        # test that the user does not have access to the details of a restaurant he did not create
-        response = self.client.get(reverse('restaurantapiapp:restaurant_detail', args=[self.restaurant.pk]))
+        # test that the user does not have access to the details
+        # of a restaurant he did not create
+        response = self.client.get(reverse(
+            'restaurantapiapp:restaurant_detail',
+            args=[self.restaurant.pk]
+            ))
         response_json = json.loads(response.content)
         self.assertEqual(response_json['detail'], 'Not found.')
 
@@ -66,11 +81,23 @@ class RestaurantDetailsTestCase(APITestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.user1 = User.objects.create_user(username='testuser', password='testpassword')
-        cls.user2 = User.objects.create_user(username='testuser2', password='testpassword2')
-        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')  
-        cls.restaurant = Restaurant.objects.create(name='test_restaurant_for_access', created_by=cls.user1)
-        cls.secure_page_url = reverse('restaurantapiapp:restaurant_detail', args=[cls.restaurant.pk])
+        cls.user1 = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+            )
+        cls.user2 = User.objects.create_user(
+            username='testuser2', 
+            password='testpassword2'
+            )
+        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')
+        cls.restaurant = Restaurant.objects.create(
+            name='test_restaurant_for_access',
+            created_by=cls.user1
+            )
+        cls.secure_page_url = reverse(
+            'restaurantapiapp:restaurant_detail',
+            args=[cls.restaurant.pk]
+            )
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -79,7 +106,10 @@ class RestaurantDetailsTestCase(APITestCase):
         cls.restaurant.delete()
 
     def obtain_token(self, username, password):
-        response = self.client.post(self.login_url, {'username': username, 'password': password})
+        response = self.client.post(self.login_url, {
+            'username': username,
+            'password': password
+            })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         return response.data['access']
 
@@ -107,7 +137,8 @@ class RestaurantDetailsTestCase(APITestCase):
         token = self.obtain_token('testuser2', 'testpassword2')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
 
-        # verifying deny access to restaurant details for non-creator of the restaurant
+        # verifying deny access to restaurant details 
+        # for non-creator of the restaurant
         response = self.client.get(self.secure_page_url)
         response_json = json.loads(response.content)
         self.assertEqual(response_json['detail'], 'Not found.')
@@ -125,13 +156,26 @@ class RestaurantDetailsTestCase(APITestCase):
             'cuisine_type': 'test_cousine'
             }
         
-        response_new_restaurant = self.client.put(self.secure_page_url, data=data)
-        self.assertEqual(response_new_restaurant.status_code, status.HTTP_200_OK)
+        response_new_restaurant = self.client.put(
+            self.secure_page_url,
+            data=data
+        )
+        self.assertEqual(
+            response_new_restaurant.status_code,
+            status.HTTP_200_OK
+            )
 
-        response_json_old_restaurant = json.loads(response_old_restaurant.content)
-        response_json_new_restaurant = json.loads(response_new_restaurant.content)
+        response_json_old_restaurant = json.loads(
+            response_old_restaurant.content
+            )
+        response_json_new_restaurant = json.loads(
+            response_new_restaurant.content
+            )
 
-        self.assertNotEqual(response_json_old_restaurant['name'], response_json_new_restaurant['name'])
+        self.assertNotEqual(
+            response_json_old_restaurant['name'],
+            response_json_new_restaurant['name']
+            )
 
     def test_delete_restaurant(self):
         # get token
@@ -140,19 +184,37 @@ class RestaurantDetailsTestCase(APITestCase):
 
         response = self.client.delete(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        
+
 
 class VisitsListTestCase(APITestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.user1 = User.objects.create_user(username='testuser', password='testpassword')
-        cls.user2 = User.objects.create_user(username='testuser2', password='testpassword2')
-        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')  
+        cls.user1 = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+            )
+        cls.user2 = User.objects.create_user(
+            username='testuser2',
+            password='testpassword2'
+            )
+        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')
         cls.secure_page_url = reverse('restaurantapiapp:visits_list')
-        cls.restaurant1 = Restaurant.objects.create(name='test_restaurant_for_access1', created_by=cls.user1)
-        cls.restaurant2 = Restaurant.objects.create(name='test_restaurant_for_access2', created_by=cls.user2)
-        cls.visit = Visit.objects.create(date_visited='2024-01-18', expenses=6000, note='test_note2', rating=3, restaurant=cls.restaurant2)
+        cls.restaurant1 = Restaurant.objects.create(
+            name='test_restaurant_for_access1',
+            created_by=cls.user1
+            )
+        cls.restaurant2 = Restaurant.objects.create(
+            name='test_restaurant_for_access2',
+            created_by=cls.user2
+            )
+        cls.visit = Visit.objects.create(
+            date_visited='2024-01-18',
+            expenses=6000,
+            note='test_note2',
+            rating=3,
+            restaurant=cls.restaurant2
+            )
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -163,7 +225,10 @@ class VisitsListTestCase(APITestCase):
         cls.visit.delete()
 
     def obtain_token(self, username, password):
-        response = self.client.post(self.login_url, {'username': username, 'password': password})
+        response = self.client.post(self.login_url, {
+            'username': username,
+            'password': password
+            })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         return response.data['access']
 
@@ -194,10 +259,15 @@ class VisitsListTestCase(APITestCase):
         # test to see if the visit was actually created
         response = self.client.get(self.secure_page_url)
         response_json = json.loads(response.content)
-        self.assertEqual(response_json['results'][0]['date_visited'], data['date_visited'])
+        self.assertEqual(response_json['results'][0]['date_visited'],
+                         data['date_visited'])
 
-        # test that the user does not have access to the details of a visit he did not create
-        response = self.client.get(reverse('restaurantapiapp:visit_detail', args=[self.visit.pk]))
+        # test that the user does not have access to
+        # the details of a visit he did not create
+        response = self.client.get(reverse(
+            'restaurantapiapp:visit_detail',
+            args=[self.visit.pk]
+            ))
         response_json = json.loads(response.content)
         self.assertEqual(response_json['detail'], 'Not found.')
 
@@ -205,7 +275,8 @@ class VisitsListTestCase(APITestCase):
         token = self.obtain_token('testuser', 'testpassword')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
 
-        # test that an authenticated user can't create a visit not to his restaurant
+        # test that an authenticated user can't create
+        # a visit not to his restaurant
         data = {
             "date_visited": "2024-01-17",
             "expenses": 9000,
@@ -217,18 +288,36 @@ class VisitsListTestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
-
 class VisitDetailsTestCase(APITestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.user1 = User.objects.create_user(username='testuser', password='testpassword')
-        cls.user2 = User.objects.create_user(username='testuser2', password='testpassword2')
-        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')  
-        cls.restaurant1 = Restaurant.objects.create(name='test_restaurant_for_access1', created_by=cls.user1)
-        cls.restaurant2 = Restaurant.objects.create(name='test_restaurant_for_access2', created_by=cls.user2)
-        cls.visit = Visit.objects.create(date_visited='2024-01-18', expenses=6000, note='test_note2', rating=3, restaurant=cls.restaurant1)
-        cls.secure_page_url = reverse('restaurantapiapp:visit_detail', args=[cls.visit.pk])
+        cls.user1 = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+            )
+        cls.user2 = User.objects.create_user(
+            username='testuser2',
+            password='testpassword2'
+            )
+        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')
+        cls.restaurant1 = Restaurant.objects.create(
+            name='test_restaurant_for_access1',
+            created_by=cls.user1
+            )
+        cls.restaurant2 = Restaurant.objects.create(
+            name='test_restaurant_for_access2',
+            created_by=cls.user2
+            )
+        cls.visit = Visit.objects.create(
+            date_visited='2024-01-18',
+            expenses=6000,
+            note='test_note2',
+            rating=3,
+            restaurant=cls.restaurant1
+            )
+        cls.secure_page_url = reverse('restaurantapiapp:visit_detail',
+                                      args=[cls.visit.pk])
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -239,7 +328,10 @@ class VisitDetailsTestCase(APITestCase):
         cls.visit.delete()
 
     def obtain_token(self, username, password):
-        response = self.client.post(self.login_url, {'username': username, 'password': password})
+        response = self.client.post(self.login_url, {
+            'username': username,
+            'password': password}
+            )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         return response.data['access']
 
@@ -292,7 +384,10 @@ class VisitDetailsTestCase(APITestCase):
         response_json_old_visit = json.loads(response_old_visit.content)
         response_json_new_visit = json.loads(response_new_visit.content)
 
-        self.assertNotEqual(response_json_old_visit['expenses'], response_json_new_visit['expenses'])
+        self.assertNotEqual(
+            response_json_old_visit['expenses'],
+            response_json_new_visit['expenses']
+            )
 
     def test_delete_visit(self):
         # get token

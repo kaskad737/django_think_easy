@@ -27,12 +27,20 @@ class RegisterSerializer(serializers.ModelSerializer):
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
 
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password = serializers.CharField(write_only=True, required=True,
+                                     validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'password', 'password2', 'email', 'first_name', 'last_name')
+        fields = [
+            'username',
+            'password',
+            'password2',
+            'email',
+            'first_name',
+            'last_name'
+            ]
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True}
@@ -40,7 +48,9 @@ class RegisterSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
-            raise serializers.ValidationError({"password": "Password fields didn't match."})
+            raise serializers.ValidationError({
+                "password": "Password fields didn't match."
+                })
 
         return attrs
 
@@ -51,8 +61,6 @@ class RegisterSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name']
         )
-
-        
         user.set_password(validated_data['password'])
         user.save()
 
@@ -75,7 +83,7 @@ class RestaurantListSerializer(serializers.ModelSerializer):
 
     def get_average_expenses(self, obj):
         return obj.average_expenses
-    
+
     details_url = serializers.HyperlinkedIdentityField(
         many=False,
         read_only=True,
@@ -85,7 +93,16 @@ class RestaurantListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Restaurant
-        fields = 'pk', 'name', 'location', 'cuisine_type', 'created_by', 'average_rating', 'average_expenses', 'details_url'
+        fields = [
+            'pk',
+            'name',
+            'location',
+            'cuisine_type',
+            'created_by',
+            'average_rating',
+            'average_expenses',
+            'details_url'
+            ]
 
 
 class RestaurantDetailsSerializer(serializers.ModelSerializer):
@@ -102,7 +119,9 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
 
     def get_restaurants_list_url(self, obj):
         request = self.context.get('request')
-        return request.build_absolute_uri('/')[:-1] + reverse('restaurantapiapp:restaurants_list')
+        return request.build_absolute_uri('/')[:-1] + reverse(
+            'restaurantapiapp:restaurants_list'
+            )
 
     visits = serializers.HyperlinkedRelatedField(
         many=True,
@@ -112,7 +131,17 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Restaurant
-        fields = 'pk', 'created_by', 'name', 'location', 'cuisine_type', 'visits', 'average_rating', 'average_expenses', 'restaurants_list_url'
+        fields = [
+            'pk',
+            'created_by',
+            'name',
+            'location',
+            'cuisine_type',
+            'visits',
+            'average_rating',
+            'average_expenses',
+            'restaurants_list_url'
+            ]
 
 
 class VisitListSerializer(serializers.ModelSerializer):
@@ -125,16 +154,27 @@ class VisitListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Visit
-        fields = 'pk', 'date_visited', 'expenses', 'note', 'rating', 'restaurant', 'details_url'
+        fields = [
+            'pk',
+            'date_visited',
+            'expenses',
+            'note',
+            'rating',
+            'restaurant',
+            'details_url'
+            ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # filter restaurants in visit create only for those who created restaurant.
+        # filter restaurants in visit create only for 
+        # those who created restaurant.
         current_user = self.context['request'].user
         if current_user.is_anonymous:
             current_user = 1
-        self.fields['restaurant'].queryset = Restaurant.objects.filter(created_by=current_user)
+        self.fields['restaurant'].queryset = Restaurant.objects.filter(
+            created_by=current_user
+            )
 
 
 class VisitDetailsSerializer(serializers.ModelSerializer):
@@ -142,14 +182,24 @@ class VisitDetailsSerializer(serializers.ModelSerializer):
 
     def get_visits_list_url(self, obj):
         request = self.context.get('request')
-        return request.build_absolute_uri('/')[:-1] + reverse('restaurantapiapp:visits_list')
-    
+        return request.build_absolute_uri('/')[:-1] + reverse(
+            'restaurantapiapp:visits_list'
+            )
+
     restaurant = serializers.HyperlinkedRelatedField(
         many=False,
         read_only=True,
         view_name='restaurantapiapp:restaurant_detail'
     )
-    
+
     class Meta:
         model = Visit
-        fields = 'pk', 'date_visited', 'expenses', 'note', 'rating', 'restaurant', 'visits_list_url'
+        fields = [
+            'pk',
+            'date_visited',
+            'expenses',
+            'note',
+            'rating',
+            'restaurant',
+            'visits_list_url'
+            ]

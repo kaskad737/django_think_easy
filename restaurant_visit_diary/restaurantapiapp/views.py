@@ -1,8 +1,22 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, CreateAPIView, ListAPIView
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    CreateAPIView,
+    ListAPIView
+    )
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.permissions import IsAuthenticated, AllowAny
+# IsAuthenticated
+from rest_framework.permissions import AllowAny
 from .models import Restaurant, Visit
-from .serializers import UsersListSerializer, RestaurantDetailsSerializer, RestaurantListSerializer, VisitListSerializer, VisitDetailsSerializer, MyTokenObtainPairSerializer, RegisterSerializer
+from .serializers import (
+    UsersListSerializer,
+    RestaurantDetailsSerializer,
+    RestaurantListSerializer,
+    VisitListSerializer,
+    VisitDetailsSerializer,
+    MyTokenObtainPairSerializer,
+    RegisterSerializer
+    )
 from django.contrib.auth.models import User
 from django.db.models import Avg
 
@@ -36,11 +50,15 @@ class RestaurantsListView(ListCreateAPIView):
         current_user = self.request.user
         if current_user.is_anonymous:
             current_user = 1
-        # Filter restaurants based on restaurants created by the current user, to restrict access to non-creators
-        queryset = Restaurant.objects.filter(created_by=current_user).annotate(_average_rating=Avg('visits__rating'), _average_expenses=Avg('visits__expenses')).order_by('pk')
+        # Filter restaurants based on restaurants created by the current user,
+        # to restrict access to non-creators
+        queryset = Restaurant.objects.filter(created_by=current_user).annotate(
+            _average_rating=Avg('visits__rating'),
+            _average_expenses=Avg('visits__expenses')
+            ).order_by('pk')
 
         return queryset
-    
+
 
 class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
     serializer_class = RestaurantDetailsSerializer
@@ -52,8 +70,12 @@ class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
         current_user = self.request.user
         if current_user.is_anonymous:
             current_user = 1
-        # Filter restaurant details based on restaurants created by the current user, to restrict access to non-creators
-        queryset = Restaurant.objects.filter(created_by=current_user).annotate(_average_rating=Avg('visits__rating'), _average_expenses=Avg('visits__expenses'))
+        # Filter restaurant details based on restaurants created by the
+        # current user, to restrict access to non-creators
+        queryset = Restaurant.objects.filter(created_by=current_user).annotate(
+            _average_rating=Avg('visits__rating'),
+            _average_expenses=Avg('visits__expenses')
+            )
 
         return queryset
 
@@ -68,7 +90,8 @@ class VisitsListView(ListCreateAPIView):
         current_user = self.request.user
         if current_user.is_anonymous:
             current_user = 1
-        # Filter visits based on restaurants created by the current user, to restrict access to non-creators
+        # Filter visits based on restaurants created by the current user, to
+        # restrict access to non-creators
         queryset = Visit.objects.filter(restaurant__created_by=current_user)
 
         return queryset
@@ -85,7 +108,8 @@ class VisitDetailsView(RetrieveUpdateDestroyAPIView):
         current_user = self.request.user
         if current_user.is_anonymous:
             current_user = 1
-        # Filter visits details based on restaurants created by the current user, to restrict access to non-creators
+        # Filter visits details based on restaurants created by the current
+        # user, to restrict access to non-creators
         queryset = Visit.objects.filter(restaurant__created_by=current_user)
 
         return queryset
