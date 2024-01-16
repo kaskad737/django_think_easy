@@ -23,10 +23,13 @@ jobs:
         ports:
           - 5432:5432
     
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: ['3.10']
+    env:
+        python-version: '3.10'
+        DB_NAME: django_restaurants
+        DB_USER: postgres
+        DB_PASSWORD: django-restaurants
+        DB_HOST: localhost
+        DB_PORT: 5432
 
     steps:
     - name: Checkout code
@@ -35,7 +38,7 @@ jobs:
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: $python-version
 
     - run: pip install flake8
         
@@ -48,22 +51,22 @@ jobs:
       run: |
         python ./restaurant_visit_diary/manage.py makemigrations
       env:
-          DB_NAME: django_restaurants
-          DB_USER: postgres
-          DB_PASSWORD: django-restaurants
-          DB_HOST: localhost
-          DB_PORT: 5432
+          DB_NAME: $DB_NAME
+          DB_USER: $DB_USER
+          DB_PASSWORD: $DB_PASSWORD
+          DB_HOST: $DB_HOST
+          DB_PORT: $DB_PORT
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     - name: Migrate
       run: |
         python ./restaurant_visit_diary/manage.py migrate
       env:
-          DB_NAME: django_restaurants
-          DB_USER: postgres
-          DB_PASSWORD: django-restaurants
-          DB_HOST: localhost
-          DB_PORT: 5432
+          DB_NAME: $DB_NAME
+          DB_USER: $DB_USER
+          DB_PASSWORD: $DB_PASSWORD
+          DB_HOST: $DB_HOST
+          DB_PORT: $DB_PORT
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         
     - name: Run Tests
