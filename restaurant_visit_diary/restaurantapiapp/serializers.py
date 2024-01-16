@@ -1,10 +1,11 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from rest_framework.reverse import reverse
 
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-from django.urls import reverse
+
 
 from .models import Restaurant, Visit
 
@@ -58,10 +59,10 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UsersListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = 'pk', 'username', 'password'
+        fields = 'pk', 'username'
 
 
 class RestaurantListSerializer(serializers.ModelSerializer):
@@ -148,6 +149,7 @@ class VisitDetailsSerializer(serializers.ModelSerializer):
         read_only=True,
         view_name='restaurantapiapp:restaurant_detail'
     )
+    
     class Meta:
         model = Visit
         fields = 'pk', 'date_visited', 'expenses', 'note', 'rating', 'restaurant', 'visits_list_url'
