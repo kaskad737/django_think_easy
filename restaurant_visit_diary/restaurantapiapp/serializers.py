@@ -1,10 +1,12 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
-from django.contrib.auth.models import User
-from .models import Restaurant, Visit
 from rest_framework.validators import UniqueValidator
+
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
+
+from .models import Restaurant, Visit
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -89,6 +91,7 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
     average_rating = serializers.SerializerMethodField()
     average_expenses = serializers.SerializerMethodField()
     restaurants_list_url = serializers.SerializerMethodField()
+    created_by = serializers.CharField(read_only=True)
 
     def get_average_rating(self, obj):
         return obj.average_rating
@@ -108,7 +111,7 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Restaurant
-        fields = 'pk', 'name', 'location', 'cuisine_type', 'visits', 'average_rating', 'average_expenses', 'restaurants_list_url'
+        fields = 'pk', 'created_by', 'name', 'location', 'cuisine_type', 'visits', 'average_rating', 'average_expenses', 'restaurants_list_url'
 
 
 class VisitListSerializer(serializers.ModelSerializer):
@@ -128,6 +131,8 @@ class VisitListSerializer(serializers.ModelSerializer):
 
         # filter restaurants in visit create only for those who created restaurant.
         current_user = self.context['request'].user
+        if current_user.is_anonymous:
+            current_user = 1
         self.fields['restaurant'].queryset = Restaurant.objects.filter(created_by=current_user)
 
 
