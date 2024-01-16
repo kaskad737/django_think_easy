@@ -12,17 +12,17 @@ class RestaurantsListTestCase(APITestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.user1 = User.objects.create_user(
-            username='testuser', 
+            username='testuser',
             password='testpassword'
             )
         cls.user2 = User.objects.create_user(
-            username='testuser2', 
+            username='testuser2',
             password='testpassword2'
             )
-        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')  
+        cls.login_url = reverse('restaurantapiapp:token_obtain_pair')
         cls.secure_page_url = reverse('restaurantapiapp:restaurants_list')
         cls.restaurant = Restaurant.objects.create(
-            name='test_restaurant_for_access', 
+            name='test_restaurant_for_access',
             created_by=cls.user2
             )
 
@@ -34,7 +34,7 @@ class RestaurantsListTestCase(APITestCase):
 
     def obtain_token(self, username, password):
         response = self.client.post(self.login_url, {
-            'username': username, 
+            'username': username,
             'password': password}
             )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -44,7 +44,7 @@ class RestaurantsListTestCase(APITestCase):
         # get token
         token = self.obtain_token('testuser', 'testpassword')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-        
+
         # authentication test
         response = self.client.get(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -86,7 +86,7 @@ class RestaurantDetailsTestCase(APITestCase):
             password='testpassword'
             )
         cls.user2 = User.objects.create_user(
-            username='testuser2', 
+            username='testuser2',
             password='testpassword2'
             )
         cls.login_url = reverse('restaurantapiapp:token_obtain_pair')
@@ -117,7 +117,7 @@ class RestaurantDetailsTestCase(APITestCase):
         # get token
         token = self.obtain_token('testuser', 'testpassword')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-        
+
         # authentication test
         response = self.client.get(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -137,7 +137,7 @@ class RestaurantDetailsTestCase(APITestCase):
         token = self.obtain_token('testuser2', 'testpassword2')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
 
-        # verifying deny access to restaurant details 
+        # verifying deny access to restaurant details
         # for non-creator of the restaurant
         response = self.client.get(self.secure_page_url)
         response_json = json.loads(response.content)
@@ -155,7 +155,7 @@ class RestaurantDetailsTestCase(APITestCase):
             'location': 'test_location',
             'cuisine_type': 'test_cousine'
             }
-        
+
         response_new_restaurant = self.client.put(
             self.secure_page_url,
             data=data
@@ -236,7 +236,7 @@ class VisitsListTestCase(APITestCase):
         # get token
         token = self.obtain_token('testuser', 'testpassword')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-        
+
         # authentication test
         response = self.client.get(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -339,7 +339,7 @@ class VisitDetailsTestCase(APITestCase):
         # get token
         token = self.obtain_token('testuser', 'testpassword')
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
-        
+
         # authentication test
         response = self.client.get(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

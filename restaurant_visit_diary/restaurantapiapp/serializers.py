@@ -167,7 +167,7 @@ class VisitListSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # filter restaurants in visit create only for 
+        # filter restaurants in visit create only for
         # those who created restaurant.
         current_user = self.context['request'].user
         if current_user.is_anonymous:

@@ -3,7 +3,7 @@ from .views import (
     MyObtainTokenPairView,
     RegisterView,
     UsersListView,
-    RestaurantsListView, 
+    RestaurantsListView,
     RestaurantDetailsView,
     VisitsListView,
     VisitDetailsView,
