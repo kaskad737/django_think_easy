@@ -1,3 +1,7 @@
+Status of Last Deployment:<br>
+<img src="https://github.com/kaskad737/django_think_easy/workflows/django.yml/badge.svg?branch=master">
+<br>
+
 # django_think_easy
 
 ## Task assignment
