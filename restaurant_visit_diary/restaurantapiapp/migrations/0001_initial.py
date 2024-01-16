@@ -15,7 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Restaurant',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                                           primary_key=True,
+                                           serialize=False,
+                                           verbose_name='ID')),
                 ('name', models.CharField(max_length=255)),
                 ('location', models.CharField(max_length=255)),
                 ('cuisine_type', models.CharField(max_length=100)),
@@ -24,12 +27,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Visit',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
                 ('date_visited', models.DateField()),
-                ('expenses', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('expenses', models.DecimalField(
+                    decimal_places=2,
+                    max_digits=10)),
                 ('note', models.TextField()),
-                ('rating', models.IntegerField(choices=[(1, 1), (2, 2), (3, 3), (4, 4), (5, 5)])),
-                ('restaurant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='restaurantapiapp.restaurant')),
+                ('rating', models.IntegerField(choices=[
+                    (1, 1),
+                    (2, 2),
+                    (3, 3),
+                    (4, 4),
+                    (5, 5)])),
+                ('restaurant', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='restaurantapiapp.restaurant')),
             ],
         ),
     ]
