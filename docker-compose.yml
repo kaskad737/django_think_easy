@@ -12,12 +12,12 @@ services:
     depends_on:
       - db
     environment:
-      - DB_NAME=django_restaurants
-      - DB_USER=postgres
-      - DB_PASSWORD=django-restaurants
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=db
-      - DB_PORT=5432
-      - SECRET_KEY=django-insecure-2#=2uska*^8#jt0@#%0u0tk3#v@y9@-8wio@7-una4=+irswhh
+      - DB_PORT=${DB_PORT}
+      - SECRET_KEY=${SECRET_KEY}
     networks:
       - django_network
 
@@ -31,7 +31,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5431:5432"
+      - "${EXTERNAL_DB_PORT}:5432"
     networks:
       - django_network
 
