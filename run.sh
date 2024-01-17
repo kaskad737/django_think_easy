@@ -9,7 +9,7 @@ if [ ! -f "$DOCKER_COMPOSE_FILE" ]; then
     exit 1
 fi
 
-# Load environment variables from a file (e.g., .env)
+# Load environment variables from a file (.env)
 ENV_FILE=".env"
 
 # Check if the environment file exists
