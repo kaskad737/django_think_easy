@@ -1,6 +1,9 @@
 from typing import Any
 from django.core.management import BaseCommand
 from django.contrib.auth.models import User
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -10,8 +13,8 @@ class Command(BaseCommand):
                 username='admin',
                 password='admin'
                 )
-            print('Creating account for admin')
+            log.info('Creating account for admin')
         else:
-            print(
+            log.info(
                 'Admin accounts can only be initialized if no Accounts exist'
                 )

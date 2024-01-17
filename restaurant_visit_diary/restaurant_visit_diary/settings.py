@@ -148,3 +148,26 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+            'base': {
+                'format': '%(asctime)s.%(msecs)03d | %(name)s |'
+                ' %(levelname)s | %(lineno)-4d | %(message)s',
+                'datefmt': '%Y-%m-%d %H:%M:%S'
+            }
+        },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'base'
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO'
+    }
+}
