@@ -46,16 +46,28 @@ class RestaurantsListView(ListCreateAPIView):
     def get_queryset(self):
 
         # Get the current user from the request
-        current_user = self.request.user
-        if current_user.is_anonymous:
-            current_user = 1
         # Filter restaurants based on restaurants created by the current user,
         # to restrict access to non-creators
-        queryset = Restaurant.objects.filter(created_by=current_user).annotate(
-            _average_rating=Avg('visits__rating'),
-            _average_expenses=Avg('visits__expenses')
-            ).order_by('pk')
-
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            current_user = 0
+            queryset = Restaurant.objects.filter(
+                created_by=current_user).annotate(
+                _average_rating=Avg('visits__rating'),
+                _average_expenses=Avg('visits__expenses')
+                ).order_by('pk')
+        elif current_user.is_superuser:
+            queryset = Restaurant.objects.all().annotate(
+                _average_rating=Avg('visits__rating'),
+                _average_expenses=Avg('visits__expenses')
+                ).order_by('pk')
+        else:
+            queryset = Restaurant.objects.filter(
+                created_by=current_user).annotate(
+                _average_rating=Avg('visits__rating'),
+                _average_expenses=Avg('visits__expenses')
+                ).order_by('pk')
+            
         return queryset
 
 
@@ -66,15 +78,27 @@ class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
 
         # Get the current user from the request
-        current_user = self.request.user
-        if current_user.is_anonymous:
-            current_user = 1
         # Filter restaurant details based on restaurants created by the
         # current user, to restrict access to non-creators
-        queryset = Restaurant.objects.filter(created_by=current_user).annotate(
-            _average_rating=Avg('visits__rating'),
-            _average_expenses=Avg('visits__expenses')
-            )
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            current_user = 0
+            queryset = Restaurant.objects.filter(
+                created_by=current_user).annotate(
+                _average_rating=Avg('visits__rating'),
+                _average_expenses=Avg('visits__expenses')
+                )
+        elif current_user.is_superuser:
+            queryset = Restaurant.objects.all().annotate(
+                _average_rating=Avg('visits__rating'),
+                _average_expenses=Avg('visits__expenses')
+                )
+        else:
+            queryset = Restaurant.objects.filter(
+                created_by=current_user).annotate(
+                _average_rating=Avg('visits__rating'),
+                _average_expenses=Avg('visits__expenses')
+                )
 
         return queryset
 
@@ -86,12 +110,18 @@ class VisitsListView(ListCreateAPIView):
     def get_queryset(self):
 
         # Get the current user from the request
-        current_user = self.request.user
-        if current_user.is_anonymous:
-            current_user = 1
         # Filter visits based on restaurants created by the current user, to
         # restrict access to non-creators
-        queryset = Visit.objects.filter(restaurant__created_by=current_user)
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            current_user = 0
+            queryset = Visit.objects.filter(
+                restaurant__created_by=current_user)
+        elif current_user.is_superuser:
+            queryset = Visit.objects.all()
+        else:
+            queryset = Visit.objects.filter(
+                restaurant__created_by=current_user)
 
         return queryset
 
@@ -104,11 +134,17 @@ class VisitDetailsView(RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
 
         # Get the current user from the request
-        current_user = self.request.user
-        if current_user.is_anonymous:
-            current_user = 1
         # Filter visits details based on restaurants created by the current
         # user, to restrict access to non-creators
-        queryset = Visit.objects.filter(restaurant__created_by=current_user)
+        current_user = self.request.user
+        if current_user.is_anonymous:
+            current_user = 0
+            queryset = Visit.objects.filter(
+                restaurant__created_by=current_user)
+        elif current_user.is_superuser:
+            queryset = Visit.objects.all()
+        else:
+            queryset = Visit.objects.filter(
+                restaurant__created_by=current_user)
 
         return queryset

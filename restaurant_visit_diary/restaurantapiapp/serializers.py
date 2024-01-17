@@ -171,10 +171,16 @@ class VisitListSerializer(serializers.ModelSerializer):
         # those who created restaurant.
         current_user = self.context['request'].user
         if current_user.is_anonymous:
-            current_user = 1
-        self.fields['restaurant'].queryset = Restaurant.objects.filter(
-            created_by=current_user
-            )
+            current_user = 0
+            self.fields['restaurant'].queryset = Restaurant.objects.filter(
+                created_by=current_user
+                )
+        elif current_user.is_superuser:
+            self.fields['restaurant'].queryset = Restaurant.objects.all()
+        else:
+            self.fields['restaurant'].queryset = Restaurant.objects.filter(
+                created_by=current_user
+                )
 
 
 class VisitDetailsSerializer(serializers.ModelSerializer):
