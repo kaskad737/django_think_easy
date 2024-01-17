@@ -80,6 +80,11 @@ class RestaurantsListTestCase(APITestCase):
         response_json = json.loads(response.content)
         self.assertEqual(response_json['detail'], 'Not found.')
 
+    def test_anonymous_user_deny_access(self):
+        # authentication test for anonymous user
+        response = self.client.get(self.secure_page_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class RestaurantDetailsTestCase(APITestCase):
     fixtures = [
@@ -209,6 +214,11 @@ class RestaurantDetailsTestCase(APITestCase):
         response = self.client.delete(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+    def test_anonymous_user_deny_access(self):
+        # authentication test for anonymous user
+        response = self.client.get(self.secure_page_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
 
 class VisitsListTestCase(APITestCase):
     fixtures = [
@@ -315,6 +325,11 @@ class VisitsListTestCase(APITestCase):
             }
         response = self.client.post(self.secure_page_url, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_anonymous_user_deny_access(self):
+        # authentication test for anonymous user
+        response = self.client.get(self.secure_page_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class VisitDetailsTestCase(APITestCase):
@@ -445,3 +460,8 @@ class VisitDetailsTestCase(APITestCase):
 
         response = self.client.delete(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_anonymous_user_deny_access(self):
+        # authentication test for anonymous user
+        response = self.client.get(self.secure_page_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
