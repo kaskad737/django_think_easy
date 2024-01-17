@@ -67,7 +67,7 @@ class RestaurantsListView(ListCreateAPIView):
                 _average_rating=Avg('visits__rating'),
                 _average_expenses=Avg('visits__expenses')
                 ).order_by('pk')
-            
+
         return queryset
 
 
