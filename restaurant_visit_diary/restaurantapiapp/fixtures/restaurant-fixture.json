@@ -1,0 +1,62 @@
+[
+{
+  "model": "restaurantapiapp.restaurant",
+  "pk": 3,
+  "fields": {
+    "name": "U vlka",
+    "location": "praha",
+    "cuisine_type": "cz",
+    "created_by": 1
+  }
+},
+{
+  "model": "restaurantapiapp.restaurant",
+  "pk": 5,
+  "fields": {
+    "name": "U Pepy new name test",
+    "location": "Prague",
+    "cuisine_type": "cz",
+    "created_by": 1
+  }
+},
+{
+  "model": "restaurantapiapp.restaurant",
+  "pk": 7,
+  "fields": {
+    "name": "U Tomasa",
+    "location": "Prague",
+    "cuisine_type": "CZ",
+    "created_by": 1
+  }
+},
+{
+  "model": "restaurantapiapp.restaurant",
+  "pk": 8,
+  "fields": {
+    "name": "test",
+    "location": "praha",
+    "cuisine_type": "test",
+    "created_by": 4
+  }
+},
+{
+  "model": "restaurantapiapp.restaurant",
+  "pk": 13,
+  "fields": {
+    "name": "test6",
+    "location": "test",
+    "cuisine_type": "test",
+    "created_by": 5
+  }
+},
+{
+  "model": "restaurantapiapp.restaurant",
+  "pk": 14,
+  "fields": {
+    "name": "test999",
+    "location": "test",
+    "cuisine_type": "test",
+    "created_by": 5
+  }
+}
+]

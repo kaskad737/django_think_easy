@@ -1,0 +1,68 @@
+[
+{
+  "model": "restaurantapiapp.visit",
+  "pk": 4,
+  "fields": {
+    "date_visited": "2020-11-11",
+    "expenses": "6666.00",
+    "note": "tttt",
+    "rating": 5,
+    "restaurant": 3
+  }
+},
+{
+  "model": "restaurantapiapp.visit",
+  "pk": 6,
+  "fields": {
+    "date_visited": "2222-11-11",
+    "expenses": "77777.00",
+    "note": "test",
+    "rating": 3,
+    "restaurant": 5
+  }
+},
+{
+  "model": "restaurantapiapp.visit",
+  "pk": 17,
+  "fields": {
+    "date_visited": "2024-01-03",
+    "expenses": "999.00",
+    "note": "yrdy",
+    "rating": 1,
+    "restaurant": 3
+  }
+},
+{
+  "model": "restaurantapiapp.visit",
+  "pk": 18,
+  "fields": {
+    "date_visited": "2024-01-17",
+    "expenses": "333.00",
+    "note": "test",
+    "rating": 2,
+    "restaurant": 7
+  }
+},
+{
+  "model": "restaurantapiapp.visit",
+  "pk": 19,
+  "fields": {
+    "date_visited": "2222-11-22",
+    "expenses": "444.00",
+    "note": "test",
+    "rating": 1,
+    "restaurant": 3
+  }
+},
+{
+  "model": "restaurantapiapp.visit",
+  "pk": 20,
+  "fields": {
+    "date_visited": "2024-01-17",
+    "expenses": "333.00",
+    "note": "test_uset2_visit",
+    "rating": 5,
+    "restaurant": 13
+  }
+}
+]

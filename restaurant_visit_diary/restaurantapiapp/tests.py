@@ -8,6 +8,10 @@ from .models import Restaurant, Visit
 
 
 class RestaurantsListTestCase(APITestCase):
+    fixtures = [
+        'user-fixtures.json',
+        'restaurant-fixture.json',
+    ]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -78,6 +82,10 @@ class RestaurantsListTestCase(APITestCase):
 
 
 class RestaurantDetailsTestCase(APITestCase):
+    fixtures = [
+        'user-fixtures.json',
+        'restaurant-fixture.json',
+    ]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -203,6 +211,11 @@ class RestaurantDetailsTestCase(APITestCase):
 
 
 class VisitsListTestCase(APITestCase):
+    fixtures = [
+        'user-fixtures.json',
+        'restaurant-fixture.json',
+        'visit-fistures.json',
+    ]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -305,6 +318,11 @@ class VisitsListTestCase(APITestCase):
 
 
 class VisitDetailsTestCase(APITestCase):
+    fixtures = [
+        'user-fixtures.json',
+        'restaurant-fixture.json',
+        'visit-fistures.json',
+    ]
 
     @classmethod
     def setUpClass(cls) -> None:
