@@ -98,11 +98,16 @@ class RestaurantDetailsTestCase(APITestCase):
             'restaurantapiapp:restaurant_detail',
             args=[cls.restaurant.pk]
             )
+        cls.admin_user = User.objects.create_superuser(
+            username='adminuser',
+            password='adminpassword'
+        )
 
     @classmethod
     def tearDownClass(cls) -> None:
         cls.user1.delete()
         cls.user2.delete()
+        cls.admin_user.delete()
         cls.restaurant.delete()
 
     def obtain_token(self, username, password):
@@ -142,6 +147,17 @@ class RestaurantDetailsTestCase(APITestCase):
         response = self.client.get(self.secure_page_url)
         response_json = json.loads(response.content)
         self.assertEqual(response_json['detail'], 'Not found.')
+
+    def test_access_for_superuser(self):
+        # get token
+        token = self.obtain_token('adminuser', 'adminpassword')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+
+        # verifying access to restaurant details
+        # for superuser
+        response = self.client.get(self.secure_page_url)
+        response_json = json.loads(response.content)
+        self.assertEqual(response_json['created_by'], self.user1.username)
 
     def test_upgrade_restaurant(self):
         # get token
@@ -318,11 +334,16 @@ class VisitDetailsTestCase(APITestCase):
             )
         cls.secure_page_url = reverse('restaurantapiapp:visit_detail',
                                       args=[cls.visit.pk])
+        cls.admin_user = User.objects.create_superuser(
+            username='adminuser',
+            password='adminpassword'
+        )
 
     @classmethod
     def tearDownClass(cls) -> None:
         cls.user1.delete()
         cls.user2.delete()
+        cls.admin_user.delete()
         cls.restaurant1.delete()
         cls.restaurant2.delete()
         cls.visit.delete()
@@ -350,6 +371,16 @@ class VisitDetailsTestCase(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
 
         # verifying access to visit details for creator of the visit
+        response = self.client.get(self.secure_page_url)
+        response_json = json.loads(response.content)
+        self.assertEqual(response_json['note'], self.visit.note)
+
+    def test_access_for_superuser(self):
+        # get token
+        token = self.obtain_token('adminuser', 'adminpassword')
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+
+        # verifying access to visit details for superuser
         response = self.client.get(self.secure_page_url)
         response_json = json.loads(response.content)
         self.assertEqual(response_json['note'], self.visit.note)
