@@ -7,6 +7,7 @@ from .views import (
     RestaurantDetailsView,
     VisitsListView,
     VisitDetailsView,
+    EmailRestorePasswordView,
 )
 
 from rest_framework_simplejwt.views import (
@@ -29,4 +30,6 @@ urlpatterns = [
          name='restaurant_detail'),
     path('visits_list/', VisitsListView.as_view(), name='visits_list'),
     path('visits/<int:pk>/', VisitDetailsView.as_view(), name='visit_detail'),
+    path('restore_password/', EmailRestorePasswordView.as_view(),
+         name='restore_password'),
 ]

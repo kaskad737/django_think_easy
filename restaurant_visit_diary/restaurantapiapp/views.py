@@ -1,3 +1,5 @@
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.generics import (
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView,
@@ -14,10 +16,12 @@ from .serializers import (
     VisitListSerializer,
     VisitDetailsSerializer,
     MyTokenObtainPairSerializer,
-    RegisterSerializer
+    RegisterSerializer,
+    EmailRestorePasswordSerializer,
     )
 from django.contrib.auth.models import User
 from django.db.models import Avg
+from django.core.mail import send_mail
 
 
 class MyObtainTokenPairView(TokenObtainPairView):
@@ -148,3 +152,25 @@ class VisitDetailsView(RetrieveUpdateDestroyAPIView):
                 restaurant__created_by=current_user)
 
         return queryset
+
+
+class EmailRestorePasswordView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = EmailRestorePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user_to_send_mail = User.objects.filter(
+                email=request.data['email']
+                )
+            if user_to_send_mail:
+                user = user_to_send_mail.values()[0]['username']
+                send_mail(
+                    subject='Password Reset',
+                    message=f'Dear {user}',
+                    from_email='django_test_email',
+                    recipient_list=[request.data['email']]
+                )
+                return Response({'message': 'email send successfuly'})
+
+        return Response({'message': serializer.errors})
