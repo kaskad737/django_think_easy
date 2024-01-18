@@ -170,7 +170,7 @@ class EmailRestorePasswordView(APIView):
                 send_email_task.delay(user=user, email=email)
                 return Response({'message': 'email send successfuly'})
             else:
-                Response(
+                return Response(
                     {'message': 'there is no user with that e-mail address'}
                     )
 

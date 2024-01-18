@@ -502,3 +502,59 @@ class VisitDetailsTestCase(APITestCase):
         # authentication test for anonymous user
         response = self.client.get(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    
+class EmailRestorePasswordTestCase(APITestCase):
+    fixtures = [
+        'user-fixtures.json',
+    ]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword',
+            email='testemail@mail.com'
+            )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls.user.delete()
+
+    def test_send_email(self):
+        data = {
+            "email": "testemail@mail.com"
+        }
+
+        response = self.client.post(
+            reverse('restaurantapiapp:restore_password'),
+            data=data
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_json_email = json.loads(response.content)
+
+        self.assertEqual(
+            response_json_email['message'],
+            'email send successfuly'
+            )
+
+    def test_bad_send_email(self):
+        data = {
+            "email": "testemailnotexists@mail.com"
+        }
+
+        response = self.client.post(
+            reverse('restaurantapiapp:restore_password'),
+            data=data
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response_json_email = json.loads(response.content)
+
+        self.assertEqual(
+            response_json_email['message'],
+            'there is no user with that e-mail address'
+            )
