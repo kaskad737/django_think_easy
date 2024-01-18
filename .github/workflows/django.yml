@@ -6,8 +6,8 @@ env:
     DB_USER: postgres
     DB_PASSWORD: django-restaurants
     DB_HOST: localhost
+    REDIS_HOST: localhost
     DB_PORT: 5432
-
 
 on:
   push:
@@ -57,6 +57,7 @@ jobs:
           DB_PASSWORD: ${{env.DB_PASSWORD}}
           DB_HOST: ${{env.DB_HOST}}
           DB_PORT: ${{env.DB_PORT}}
+          REDIS_HOST: ${{ env.REDIS_HOST }}
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         
     - name: Run Tests
@@ -68,6 +69,7 @@ jobs:
           DB_PASSWORD: ${{env.DB_PASSWORD}}
           DB_HOST: ${{env.DB_HOST}}
           DB_PORT: ${{env.DB_PORT}}
+          REDIS_HOST: ${{ env.REDIS_HOST }}
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
 
     - run: flake8 .
