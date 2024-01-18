@@ -7,6 +7,43 @@ from django.contrib.auth.models import User
 from .models import Restaurant, Visit
 
 
+class RegisterViewTestCase(APITestCase):
+
+    def test_registration(self):
+        data = {
+            "username": "creation_test_user",
+            "password": "creation_test_user",
+            "password2": "creation_test_user",
+            "email": "test@email.com",
+            "first_name": "John",
+            "last_name": "Doe"
+        }
+
+        response = self.client.post(
+            reverse('restaurantapiapp:auth_register'),
+            data=data
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_bad_registration(self):
+        data = {
+            "username": "",
+            "password": "creation_test_user",
+            "password2": "creation_test_user",
+            "email": "test@email.com",
+            "first_name": "John",
+            "last_name": "Doe"
+        }
+
+        response = self.client.post(
+            reverse('restaurantapiapp:auth_register'),
+            data=data
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
 class RestaurantsListTestCase(APITestCase):
     fixtures = [
         'user-fixtures.json',
