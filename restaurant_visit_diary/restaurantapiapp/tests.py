@@ -503,7 +503,7 @@ class VisitDetailsTestCase(APITestCase):
         response = self.client.get(self.secure_page_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    
+
 class EmailRestorePasswordTestCase(APITestCase):
     fixtures = [
         'user-fixtures.json',
