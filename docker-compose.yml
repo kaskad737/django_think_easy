@@ -53,9 +53,9 @@ services:
     image: postgres:16
     container_name: "postgres_django"
     environment:
-      POSTGRES_DB: django_restaurants
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: django-restaurants
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

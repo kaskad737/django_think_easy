@@ -4,23 +4,38 @@ Status of Last Deployment:<br>
 
 # django_think_easy
 
-## Task assignment
-Aim of this task is to create 'restaurant visit diary'. Our users like travel and they would like to write down their own reviews restaurants they have visited to know where to go next / to whom to recommend. It is therefore necessary to record the Restaurant and the Visit. At the Restaurant it is necessary to know the name, place, type (type of cuisine). The visit should records the date of the visit, the expense, a note (where the user can write down what he / she has given and other findings) and an evaluation (values ​​ranging from 1 to 5).
-The system should use DB (we use Postgresql), but the default SQLite will suffice. The project should contain a README, which will include steps on how to run the project. The system should use Django and djangorestframework packages.
-## Requirements
-### project launch (docker):
-- set Docker (or docker-compose) to run. I.e. create `Dockerfile` (and possibly` docker-compose.yml`) (django + ideally Postgresql)
-- Create a shell script for easy execution.
-- bonus: set django + docker for local startup and production startup (with env variables)
-### django rest framework
-- user registration and login via API (use [JWT] to log in (https://github.com/davesque/django-rest-framework-simplejwt))
-- Ability to list, create, edit, delete restaurants.
-- Possibility to create a Visit to a certain Restaurant (A visit to the Restaurant can be created only by the user who created the given Restaurant)
-- Show all visits (date) and average rating and spending of all visits in the restaurant listing and dateil.
-- bonus_1: Documentation for api endpoints should be available (we use [drf_yasg] (https://github.com/axnsan12/drf-yasg) to automatically generate documentation).
-- bonus_2: sending an email when forgetting the password to the email (just write the email to the console, see [django docs] (https://docs.djangoproject.com/en/2.2/topics/email/#console-backend)) using queue ( eg [Celery] (https://docs.celeryproject.org/en/latest/django/first-steps-with-django.html))
-- bonus_3 connection to 3rd party API (eg Zomato, which could list restaurants in a location)
-## testing
-- suggest a way to run tests.
-- use buildin django unittest module and / or pousks
-- bonus_1: use fixtures in testing
+## How to run project
+
+1. "git clone" this project
+2. Create ".env" file in the root folder of the project with the following content (insert your values):
+
+    ```text
+    - SECRET_KEY=django-secret-key
+    - DB_NAME=postgres-django-project-db-name
+    - DB_USER=postgres-user
+    - DB_PASSWORD=postgres-django-project-db-password
+    - DB_PORT=1234 (default 5432)
+    - EXTERNAL_DB_PORT=5431 (port in case you already have one base running on the same port in your system)
+    - EXTERNAL_REDIS_PORT=6379 (port in case you already have one base running on the same port in your system)
+    ```
+
+3. In the root folder of the project, run "bash run.sh"
+
+## Views description
+
+1. Each registered user has access only to his own list of restaurants and only to his list of created visits.
+2. A registered user can only create/update visits to restaurants of which he is the owner/creator.
+3. Each user has access only to his/her own restaurant details, the restaurant details contain links to the visits, if any, created by the user.
+4. Each user only has access to their own visit details.
+5. A user with admin rights has the right to view everything and change everything
+6. Anonymous user has access only to registration, to the page with password return if he forgot it and to the login page.
+
+## Documentation for api endpoints
+
+When the project is launched
+
+<http://127.0.0.1:8000/swagger/>
+
+## Tests
+
+Tests are run every time a commit is pushed to the repository. On the main page of this repo you can also see the result of testing workflow. Testing was realized through "Git Actions".
