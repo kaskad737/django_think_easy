@@ -21,7 +21,7 @@ from .serializers import (
     )
 from django.contrib.auth.models import User
 from django.db.models import Avg
-from django.core.mail import send_mail
+from .tasks import send_email_task
 
 
 class MyObtainTokenPairView(TokenObtainPairView):
@@ -165,12 +165,8 @@ class EmailRestorePasswordView(APIView):
                 )
             if user_to_send_mail:
                 user = user_to_send_mail.values()[0]['username']
-                send_mail(
-                    subject='Password Reset',
-                    message=f'Dear {user}',
-                    from_email='django_test_email',
-                    recipient_list=[request.data['email']]
-                )
+                # send email through celery task
+                send_email_task(user=user, request=request)
                 return Response({'message': 'email send successfuly'})
 
         return Response({'message': serializer.errors})
