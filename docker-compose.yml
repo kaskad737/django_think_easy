@@ -11,6 +11,28 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - redis_db
+    environment:
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT}
+      - SECRET_KEY=${SECRET_KEY}
+    networks:
+      - django_network
+
+  celery:
+    restart: always
+    image: python:3.10
+    command: bash -c "pip install -r ./app/requirements.txt && celery -A ./app/restaurant_visit_diary worker -l info"
+    volumes:
+      - ./restaurant_visit_diary:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis_db
     environment:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
@@ -32,6 +54,15 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "${EXTERNAL_DB_PORT}:5432"
+    networks:
+      - django_network
+
+  redis_db:
+    restart: always
+    image: "redis:latest"
+    container_name: "redis_django"
+    ports:
+      - "${EXTERNAL_REDIS_PORT}:6379"
     networks:
       - django_network
 

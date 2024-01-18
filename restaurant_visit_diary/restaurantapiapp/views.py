@@ -165,8 +165,9 @@ class EmailRestorePasswordView(APIView):
                 )
             if user_to_send_mail:
                 user = user_to_send_mail.values()[0]['username']
+                email = request.data['email']
                 # send email through celery task
-                send_email_task(user=user, request=request)
+                send_email_task.delay(user=user, email=email)
                 return Response({'message': 'email send successfuly'})
 
         return Response({'message': serializer.errors})
