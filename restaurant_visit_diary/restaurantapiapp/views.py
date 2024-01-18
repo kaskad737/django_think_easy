@@ -169,5 +169,9 @@ class EmailRestorePasswordView(APIView):
                 # send email through celery task
                 send_email_task.delay(user=user, email=email)
                 return Response({'message': 'email send successfuly'})
+            else:
+                Response(
+                    {'message': 'there is no user with that e-mail address'}
+                    )
 
         return Response({'message': serializer.errors})
