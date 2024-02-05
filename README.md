@@ -10,13 +10,14 @@ Status of Last Deployment:<br>
 2. Create ".env" file in the root folder of the project with the following content (insert your values):
 
     ```text
-    - SECRET_KEY=django-secret-key
-    - DB_NAME=postgres-django-project-db-name
-    - DB_USER=postgres-user
-    - DB_PASSWORD=postgres-django-project-db-password
-    - DB_PORT=1234 (default 5432)
-    - EXTERNAL_DB_PORT=5431 (port in case you already have one base running on the same port in your system)
-    - EXTERNAL_REDIS_PORT=6379 (port in case you already have one base running on the same port in your system)
+    SECRET_KEY=django-secret-key
+    DB_NAME=postgres-django-project-db-name
+    DB_USER=postgres-user
+    DB_PASSWORD=postgres-django-project-db-password
+    DB_PORT=1234 (default 5432)
+    EXTERNAL_DB_PORT=5431 (port in case you already have one base running on the same port in your system)
+    EXTERNAL_REDIS_PORT=6379 (port in case you already have one base running on the same port in your system)
+    DEBUG=(True or False) - True=DEV, False=PROD run type
     ```
 
 3. In the root folder of the project, run "bash run.sh"
