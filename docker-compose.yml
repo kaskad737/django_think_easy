@@ -3,11 +3,10 @@ version: '3'
 services:
   web:
     restart: always
-    image: python:3.10
     container_name: "web_django"
-    command: bash -c "pip install -r ./app/requirements.txt && pip install celery && pip install redis && python ./app/manage.py makemigrations && python ./app/manage.py migrate && python ./app/manage.py initadmin && python ./app/manage.py runserver 0.0.0.0:8000"
-    volumes:
-      - ./restaurant_visit_diary:/app
+    build:
+      context: .
+      dockerfile: django_dockerfile
     ports:
       - "8000:8000"
     depends_on:
@@ -26,12 +25,10 @@ services:
 
   celery:
     restart: always
-    image: python:3.10
     container_name: "celery_django"
-    working_dir: /app
-    command: bash -c "pip install -r ./requirements.txt && pip install celery && pip install redis && celery -A restaurant_visit_diary worker -l info"
-    volumes:
-      - ./restaurant_visit_diary:/app
+    build:
+      context: .
+      dockerfile: django_celery_dockerfile
     ports:
       - "8001:8001"
     depends_on:
