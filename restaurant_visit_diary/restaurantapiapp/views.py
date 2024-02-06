@@ -24,7 +24,10 @@ from django.contrib.auth.models import User
 from django.db.models import Avg
 from .tasks import send_email_task
 import requests
+import logging
 import environ
+
+log = logging.getLogger(__name__)
 
 env = environ.Env()
 environ.Env.read_env()
@@ -190,7 +193,8 @@ class RestaurantsSearchView(APIView):
 
         try:
             token = env("API_TOKEN")
-        except:
+        except Exception as exc:
+            log.warning(exc)
             token = False
 
         if token:

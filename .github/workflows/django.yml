@@ -8,7 +8,7 @@ env:
   DB_HOST: localhost
   DB_PORT: 5432
   REDIS_HOST: localhost
-  ENVIRONMENT_TYPE: 'development'
+  ENVIRONMENT_TYPE: "development"
 
 on:
   push:
@@ -71,6 +71,7 @@ jobs:
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           REDIS_HOST: ${{ env.REDIS_HOST }}
           ENVIRONMENT_TYPE: ${{ env.ENVIRONMENT_TYPE }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
 
       - name: Run Tests
         run: |
@@ -84,5 +85,6 @@ jobs:
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
           REDIS_HOST: ${{ env.REDIS_HOST }}
           ENVIRONMENT_TYPE: ${{ env.ENVIRONMENT_TYPE }}
+          API_TOKEN: ${{ secrets.API_TOKEN }}
 
       - run: flake8 .
