@@ -8,7 +8,7 @@ env:
   DB_HOST: localhost
   DB_PORT: 5432
   REDIS_HOST: localhost
-  DEBUG: True
+  ENVIRONMENT_TYPE: 'development'
 
 on:
   push:
@@ -63,26 +63,26 @@ jobs:
         run: |
           python ./restaurant_visit_diary/manage.py migrate
         env:
-          DB_NAME: ${{env.DB_NAME}}
-          DB_USER: ${{env.DB_USER}}
-          DB_PASSWORD: ${{env.DB_PASSWORD}}
-          DB_HOST: ${{env.DB_HOST}}
-          DB_PORT: ${{env.DB_PORT}}
+          DB_NAME: ${{ env.DB_NAME }}
+          DB_USER: ${{ env.DB_USER }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          DB_HOST: ${{ env.DB_HOST }}
+          DB_PORT: ${{ env.DB_PORT }}
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          REDIS_HOST: ${{env.REDIS_HOST}}
-          DEBUG: ${{env.DEBUG}}
+          REDIS_HOST: ${{ env.REDIS_HOST }}
+          ENVIRONMENT_TYPE: ${{ env.ENVIRONMENT_TYPE }}
 
       - name: Run Tests
         run: |
           python ./restaurant_visit_diary/manage.py test restaurantapiapp
         env:
-          DB_NAME: ${{env.DB_NAME}}
-          DB_USER: ${{env.DB_USER}}
-          DB_PASSWORD: ${{env.DB_PASSWORD}}
-          DB_HOST: ${{env.DB_HOST}}
-          DB_PORT: ${{env.DB_PORT}}
+          DB_NAME: ${{ env.DB_NAME}}
+          DB_USER: ${{ env.DB_USER }}
+          DB_PASSWORD: ${{ env.DB_PASSWORD }}
+          DB_HOST: ${{ env.DB_HOST }}
+          DB_PORT: ${{ env.DB_PORT }}
           SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-          REDIS_HOST: ${{env.REDIS_HOST}}
-          DEBUG: ${{env.DEBUG}}
+          REDIS_HOST: ${{ env.REDIS_HOST }}
+          ENVIRONMENT_TYPE: ${{ env.ENVIRONMENT_TYPE }}
 
       - run: flake8 .
