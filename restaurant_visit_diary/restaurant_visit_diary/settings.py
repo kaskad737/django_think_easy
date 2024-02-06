@@ -27,9 +27,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ENVIRONMENT_TYPE = env('ENVIRONMENT_TYPE')
+
+if ENVIRONMENT_TYPE == 'production':
+    from .settings_production import *
+elif ENVIRONMENT_TYPE == 'development':
+    from .settings_development import *
 
 
 # Application definition

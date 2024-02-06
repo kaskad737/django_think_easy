@@ -9,7 +9,7 @@ ARG DB_HOST
 ARG REDIS_HOST
 ARG DB_PORT
 ARG SECRET_KEY
-ARG DEBUG
+ARG ENVIRONMENT_TYPE
 
 ENV DB_NAME $DB_NAME
 ENV DB_USER $DB_USER
@@ -18,13 +18,11 @@ ENV DB_HOST $DB_HOST
 ENV REDIS_HOST $REDIS_HOST
 ENV DB_PORT $DB_PORT
 ENV SECRET_KEY $SECRET_KEY
-ENV DEBUG $DEBUG
+ENV ENVIRONMENT_TYPE $ENVIRONMENT_TYPE
 
 COPY ./restaurant_visit_diary /app
 
-RUN pip install -r requirements.txt && \
-    pip install celery && \
-    pip install redis
+RUN pip install -r requirements.txt
 
 CMD ["bash", "-c", "celery -A restaurant_visit_diary worker -l info"]
 

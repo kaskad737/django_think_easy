@@ -17,7 +17,7 @@ Status of Last Deployment:<br>
     DB_PORT=1234 (default 5432)
     EXTERNAL_DB_PORT=5431 (port in case you already have one base running on the same port in your system)
     EXTERNAL_REDIS_PORT=6379 (port in case you already have one base running on the same port in your system)
-    DEBUG=(True or False) - True=DEV, False=PROD run type
+    ENVIRONMENT_TYPE=(production or development) - (type here "production" or "development")
     ```
 
 3. In the root folder of the project, run "bash run.sh"

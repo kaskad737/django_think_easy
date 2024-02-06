@@ -22,9 +22,7 @@ ENV DEBUG $DEBUG
 
 COPY ./restaurant_visit_diary /app
 
-RUN pip install -r requirements.txt && \
-    pip install celery && \
-    pip install redis
+RUN pip install -r requirements.txt
 
 CMD ["bash", "-c", "python manage.py makemigrations && \
     python manage.py migrate && \

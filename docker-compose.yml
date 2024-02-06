@@ -20,7 +20,7 @@ services:
       - REDIS_HOST=redis_db
       - DB_PORT=${DB_PORT}
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
+      - ENVIRONMENT_TYPE=${ENVIRONMENT_TYPE}
     networks:
       - django_network
 
@@ -43,7 +43,7 @@ services:
       - REDIS_HOST=redis_db
       - DB_PORT=${DB_PORT}
       - SECRET_KEY=${SECRET_KEY}
-      - DEBUG=${DEBUG}
+      - ENVIRONMENT_TYPE=${ENVIRONMENT_TYPE}
     networks:
       - django_network
 
