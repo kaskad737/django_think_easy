@@ -192,7 +192,8 @@ class RestaurantsSearchView(APIView):
             headers = {
                 'Content-Type': 'application/json',
                 'X-Goog-Api-Key': 'AIzaSyDlFBFvi9oTr5MD18vpeXxe_URmMp7ylp8',
-                'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,'
+                'X-Goog-FieldMask': 'places.displayName,places.'
+                                    'formattedAddress,'
                                     'places.websiteUri,places.rating'
             }
 
