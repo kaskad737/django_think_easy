@@ -32,8 +32,12 @@ ENVIRONMENT_TYPE = env('ENVIRONMENT_TYPE')
 
 if ENVIRONMENT_TYPE == 'production':
     from .settings_production import DEBUG, ALLOWED_HOSTS
+    DEBUG = DEBUG
+    ALLOWED_HOSTS = ALLOWED_HOSTS
 elif ENVIRONMENT_TYPE == 'development':
     from .settings_development import DEBUG, ALLOWED_HOSTS
+    DEBUG = DEBUG
+    ALLOWED_HOSTS = ALLOWED_HOSTS
 
 
 # Application definition
