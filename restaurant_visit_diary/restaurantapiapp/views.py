@@ -186,13 +186,14 @@ class RestaurantsSearchView(APIView):
         serializer = RestaurantsSearchSerializer(data=request.data)
         if serializer.is_valid():
             payload = {
-                "textQuery": f"{request.data.get('search_query')}"
+                'textQuery': f'{request.data.get("search_query")}'
             }
 
             headers = {
-                "Content-Type": "application/json",
-                "X-Goog-Api-Key": "AIzaSyDlFBFvi9oTr5MD18vpeXxe_URmMp7ylp8",
-                "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.websiteUri,places.rating"
+                'Content-Type': 'application/json',
+                'X-Goog-Api-Key': 'AIzaSyDlFBFvi9oTr5MD18vpeXxe_URmMp7ylp8',
+                'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,'
+                                    'places.websiteUri,places.rating'
             }
 
             url = 'https://places.googleapis.com/v1/places:searchText'
@@ -202,7 +203,8 @@ class RestaurantsSearchView(APIView):
             if response.ok:
                 response_data_list = [
                     {
-                        'restaurant_name': place.get('displayName').get('text'),
+                        'restaurant_name': place.get('displayName')
+                        .get('text'),
                         'address': place.get('formattedAddress'),
                         'website_uri': place.get('websiteUri'),
                         'rating': place.get('rating')
