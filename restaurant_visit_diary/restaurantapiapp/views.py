@@ -5,7 +5,7 @@ from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
     CreateAPIView,
     ListAPIView
-    )
+)
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .models import Restaurant, Visit
@@ -18,10 +18,12 @@ from .serializers import (
     MyTokenObtainPairSerializer,
     RegisterSerializer,
     EmailRestorePasswordSerializer,
-    )
+    RestaurantsSearchSerializer,
+)
 from django.contrib.auth.models import User
 from django.db.models import Avg
 from .tasks import send_email_task
+import requests
 
 
 class MyObtainTokenPairView(TokenObtainPairView):
@@ -59,18 +61,18 @@ class RestaurantsListView(ListCreateAPIView):
                 created_by=current_user).annotate(
                 _average_rating=Avg('visits__rating'),
                 _average_expenses=Avg('visits__expenses')
-                ).order_by('pk')
+            ).order_by('pk')
         elif current_user.is_superuser:
             queryset = Restaurant.objects.all().annotate(
                 _average_rating=Avg('visits__rating'),
                 _average_expenses=Avg('visits__expenses')
-                ).order_by('pk')
+            ).order_by('pk')
         else:
             queryset = Restaurant.objects.filter(
                 created_by=current_user).annotate(
                 _average_rating=Avg('visits__rating'),
                 _average_expenses=Avg('visits__expenses')
-                ).order_by('pk')
+            ).order_by('pk')
 
         return queryset
 
@@ -91,18 +93,18 @@ class RestaurantDetailsView(RetrieveUpdateDestroyAPIView):
                 created_by=current_user).annotate(
                 _average_rating=Avg('visits__rating'),
                 _average_expenses=Avg('visits__expenses')
-                )
+            )
         elif current_user.is_superuser:
             queryset = Restaurant.objects.all().annotate(
                 _average_rating=Avg('visits__rating'),
                 _average_expenses=Avg('visits__expenses')
-                )
+            )
         else:
             queryset = Restaurant.objects.filter(
                 created_by=current_user).annotate(
                 _average_rating=Avg('visits__rating'),
                 _average_expenses=Avg('visits__expenses')
-                )
+            )
 
         return queryset
 
@@ -162,7 +164,7 @@ class EmailRestorePasswordView(APIView):
         if serializer.is_valid():
             user_to_send_mail = User.objects.filter(
                 email=request.data['email']
-                )
+            )
             if user_to_send_mail:
                 user = user_to_send_mail.values()[0]['username']
                 email = request.data['email']
@@ -172,6 +174,44 @@ class EmailRestorePasswordView(APIView):
             else:
                 return Response(
                     {'message': 'there is no user with that e-mail address'}
-                    )
+                )
 
         return Response({'message': serializer.errors})
+
+
+class RestaurantsSearchView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RestaurantsSearchSerializer(data=request.data)
+        if serializer.is_valid():
+            payload = {
+                "textQuery": f"{request.data.get('search_query')}"
+            }
+
+            headers = {
+                "Content-Type": "application/json",
+                "X-Goog-Api-Key": "AIzaSyDlFBFvi9oTr5MD18vpeXxe_URmMp7ylp8",
+                "X-Goog-FieldMask": "places.displayName,places.formattedAddress,places.websiteUri,places.rating"
+            }
+
+            url = 'https://places.googleapis.com/v1/places:searchText'
+
+            response = requests.post(url, json=payload, headers=headers)
+
+            if response.ok:
+                response_data_list = [
+                    {
+                        'restaurant_name': place.get('displayName').get('text'),
+                        'address': place.get('formattedAddress'),
+                        'website_uri': place.get('websiteUri'),
+                        'rating': place.get('rating')
+                    }
+                    for place in response.json()['places']
+                ]
+
+                return Response({'result': response_data_list})
+            else:
+                return Response({'message': response.status_code})
+        else:
+            return Response({'message': serializer.errors})

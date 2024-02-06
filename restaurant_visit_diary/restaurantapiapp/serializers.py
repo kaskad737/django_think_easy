@@ -23,9 +23,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-            required=True,
-            validators=[UniqueValidator(queryset=User.objects.all())]
-            )
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
 
     password = serializers.CharField(write_only=True, required=True,
                                      validators=[validate_password])
@@ -40,7 +40,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name'
-            ]
+        ]
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True}
@@ -50,7 +50,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({
                 "password": "Password fields didn't match."
-                })
+            })
 
         return attrs
 
@@ -102,7 +102,7 @@ class RestaurantListSerializer(serializers.ModelSerializer):
             'average_rating',
             'average_expenses',
             'details_url'
-            ]
+        ]
 
 
 class RestaurantDetailsSerializer(serializers.ModelSerializer):
@@ -121,7 +121,7 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return request.build_absolute_uri('/')[:-1] + reverse(
             'restaurantapiapp:restaurants_list'
-            )
+        )
 
     visits = serializers.HyperlinkedRelatedField(
         many=True,
@@ -141,7 +141,7 @@ class RestaurantDetailsSerializer(serializers.ModelSerializer):
             'average_rating',
             'average_expenses',
             'restaurants_list_url'
-            ]
+        ]
 
 
 class VisitListSerializer(serializers.ModelSerializer):
@@ -162,7 +162,7 @@ class VisitListSerializer(serializers.ModelSerializer):
             'rating',
             'restaurant',
             'details_url'
-            ]
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -174,13 +174,13 @@ class VisitListSerializer(serializers.ModelSerializer):
             current_user = 0
             self.fields['restaurant'].queryset = Restaurant.objects.filter(
                 created_by=current_user
-                )
+            )
         elif current_user.is_superuser:
             self.fields['restaurant'].queryset = Restaurant.objects.all()
         else:
             self.fields['restaurant'].queryset = Restaurant.objects.filter(
                 created_by=current_user
-                )
+            )
 
 
 class VisitDetailsSerializer(serializers.ModelSerializer):
@@ -190,7 +190,7 @@ class VisitDetailsSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return request.build_absolute_uri('/')[:-1] + reverse(
             'restaurantapiapp:visits_list'
-            )
+        )
 
     restaurant = serializers.HyperlinkedRelatedField(
         many=False,
@@ -208,7 +208,7 @@ class VisitDetailsSerializer(serializers.ModelSerializer):
             'rating',
             'restaurant',
             'visits_list_url'
-            ]
+        ]
 
 
 class EmailRestorePasswordSerializer(serializers.ModelSerializer):
@@ -219,3 +219,7 @@ class EmailRestorePasswordSerializer(serializers.ModelSerializer):
         fields = [
             'email',
         ]
+
+
+class RestaurantsSearchSerializer(serializers.Serializer):
+    search_query = serializers.CharField(max_length=100)
