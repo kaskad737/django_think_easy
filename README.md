@@ -18,6 +18,7 @@ Status of Last Deployment:<br>
     EXTERNAL_DB_PORT=5431 (port in case you already have one base running on the same port in your system)
     EXTERNAL_REDIS_PORT=6379 (port in case you already have one base running on the same port in your system)
     ENVIRONMENT_TYPE=(production or development) - (type here "production" or "development")
+    API_TOKEN=(token for google places api, token is not required, but this functionality will not work without it)
     ```
 
 3. In the root folder of the project, run "bash run.sh"
