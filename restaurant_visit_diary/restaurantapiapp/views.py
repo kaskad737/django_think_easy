@@ -24,6 +24,10 @@ from django.contrib.auth.models import User
 from django.db.models import Avg
 from .tasks import send_email_task
 import requests
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 class MyObtainTokenPairView(TokenObtainPairView):
@@ -180,41 +184,50 @@ class EmailRestorePasswordView(APIView):
 
 
 class RestaurantsSearchView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = RestaurantsSearchSerializer(data=request.data)
-        if serializer.is_valid():
-            payload = {
-                'textQuery': f'{request.data.get("search_query")}'
-            }
 
-            headers = {
-                'Content-Type': 'application/json',
-                'X-Goog-Api-Key': 'AIzaSyDlFBFvi9oTr5MD18vpeXxe_URmMp7ylp8',
-                'X-Goog-FieldMask': 'places.displayName,places.'
-                                    'formattedAddress,'
-                                    'places.websiteUri,places.rating'
-            }
+        try:
+            token = env("API_TOKEN")
+        except:
+            token = False
 
-            url = 'https://places.googleapis.com/v1/places:searchText'
+        if token:
+            serializer = RestaurantsSearchSerializer(data=request.data)
+            if serializer.is_valid():
+                payload = {
+                    'textQuery': f'{request.data.get("search_query")}'
+                }
 
-            response = requests.post(url, json=payload, headers=headers)
+                headers = {
+                    'Content-Type': 'application/json',
+                    'X-Goog-Api-Key': f'{token}',
+                    'X-Goog-FieldMask': 'places.displayName,places.'
+                                        'formattedAddress,'
+                                        'places.websiteUri,places.rating'
+                }
 
-            if response.ok:
-                response_data_list = [
-                    {
-                        'restaurant_name': place.get('displayName')
-                        .get('text'),
-                        'address': place.get('formattedAddress'),
-                        'website_uri': place.get('websiteUri'),
-                        'rating': place.get('rating')
-                    }
-                    for place in response.json()['places']
-                ]
+                url = 'https://places.googleapis.com/v1/places:searchText'
 
-                return Response({'result': response_data_list})
+                response = requests.post(url, json=payload, headers=headers)
+
+                if response.ok:
+                    response_data_list = [
+                        {
+                            'restaurant_name': place.get('displayName')
+                            .get('text'),
+                            'address': place.get('formattedAddress'),
+                            'website_uri': place.get('websiteUri'),
+                            'rating': place.get('rating')
+                        }
+                        for place in response.json()['places']
+                    ]
+
+                    return Response({'result': response_data_list})
+                else:
+                    return Response({'message': response.status_code})
             else:
-                return Response({'message': response.status_code})
+                return Response({'message': serializer.errors})
         else:
-            return Response({'message': serializer.errors})
+            return Response({'message': 'wrong token'})
